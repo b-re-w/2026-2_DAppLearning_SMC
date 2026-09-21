@@ -48,6 +48,4 @@
 
 # AI Agents
 .agents/
-!.claude/skills
 .claude/
-!.claude/skills
