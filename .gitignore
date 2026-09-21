@@ -1,26 +1,21 @@
 # Node modules
 /node_modules
-*/node_modules
+package-lock.json
 
 # Compilation output
 /dist
-*/dist
 
 # pnpm deploy output
 /bundle
-*/bundle
 
 # Hardhat Build Artifacts
 /artifacts
-*/artifacts
 
 # Hardhat compilation (v2) support directory
 /cache
-*/cache
 
 # Typechain output
 /types
-*/types
 
 # Environment files
 .env
@@ -29,15 +24,12 @@
 
 # Hardhat coverage reports
 /coverage
-*/coverage
 
 # Gas snapshot files
 /.gas-snapshot
-*/.gas-snapshot
 
 # Snapshot cheatcodes output
 /snapshots
-*/snapshots
 
 # Debug info
 *.dbg.json
