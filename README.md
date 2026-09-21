@@ -1,5 +1,5 @@
 # destat-lecture
-CNU Blockchain Class - DApp
+CNU Blockchain Class - Smart Contract
 
 
 ## De-centralized Statistics App
