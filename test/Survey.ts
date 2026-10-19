@@ -522,7 +522,29 @@ describe("Survey init", () => {
 
     describe("Rewards", () => {
         it("should pay correct reward to respondent", async () => {
-            
+            const { ethers } = await network.connect();
+            const [, respondent] = await ethers.getSigners();  // Set account
+
+            // Deploy
+            const targetNumber = 100;
+            const poolAmount = ethers.parseEther("10");
+            const rewardAmount = poolAmount / BigInt(targetNumber);  // 10 ETH / 100 = 0.1 ETH
+            const cSurvey = await ethers.deployContract(
+                "Survey",
+                [title, description, targetNumber, questions],
+                { value: poolAmount },
+            );
+
+            // Submit first answer
+            const answer = {
+                respondent: respondent.address,
+                answers: [1],
+            };
+
+            // Validate reward balance change
+            await expect(
+                cSurvey.connect(respondent).submitAnswer(answer),
+            ).to.changeEtherBalance(ethers, respondent, rewardAmount);
         });
     });
 });
