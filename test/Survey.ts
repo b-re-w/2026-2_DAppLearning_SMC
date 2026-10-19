@@ -226,7 +226,7 @@ it("Survey init", async () => {
         await survey.getAddress(),
         pDesc
     );
-    console.log(desc);
+    console.log(decodeUni(desc));
 
 
 
