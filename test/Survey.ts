@@ -165,13 +165,17 @@ it("Survey init", async () => {
     const { ethers } = await network.connect();
 
     const title: string = "막무가내 설문조사";
-    const description: string = "중앙화된 설문조사로, 모든 데이터는 공개되지 않습니다.";
+    const description: string = "중앙화된 설문조사로서, 모든 데이터는 공개되지 않습니다.";
     const questions: Question[] = [
         {
             question: "누가 내 응답을 관리할 때 더 솔직할 수 있을까요?",
             options: [
                 "구글 폼 운영자", "탈 중앙화된 블록체인", "상관 없음"
             ]
+        },
+        {
+            question: "test2",
+            options: ["구글폼 운영자"]
         }
     ]
 
@@ -210,7 +214,9 @@ it("Survey init", async () => {
 
     const decodeUni = (hex: string) =>
         Buffer.from(hex.slice(2), "hex").toString("utf-8");
-    //console.log(decodeUni(slot0Data));
+
+    const nextHash = (hex: string, i: number) =>
+        "0x" + (BigInt(hex) + BigInt(i)).toString(16);
 
     // Primitive type
     console.log("Primitive type -------");
@@ -228,11 +234,37 @@ it("Survey init", async () => {
     );
     console.log(decodeUni(desc));
 
-
-
-    // 
-    console.log(slot1Data);
-    console.log(slot4Data);
-    console.log(slot5Data);
+    // Array Type
+    ////
+    //// pQuestions:      0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19b
+    //// pQuestions + 1 : 0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19c
+    ////
+    //// question0  <------------ pQuestions
+    //// question0_options[]  <-- pQuestions + 1
+    //// question1  <------------ pQuestions + 2
+    //// question1_options[]  <-- pQuestions + 3
+    //// ...
+    console.log("\nArray Type -------");
+    console.log("slot4Data: ", slot4Data);
+    const pQuestions = keccak256(ethers.toBeHex(4, 32));
+    const question0 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pQuestions, 0)
+    );
+    const question0_options = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pQuestions, 1)
+    );
+    const question1 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pQuestions, 2)
+    );
+    const question1_options = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pQuestions, 3)
+    );
+    console.log("question0: ", question0);
+    console.log("question0_options: ", question0_options);
+    console.log("question1: ", question1, decodeUni(question1));
+    console.log("question1_options: ", question1_options);
 });
-
