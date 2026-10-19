@@ -16,8 +16,8 @@ contract Survey {
     string public description;
     uint256 public targetNumber;
     uint256 public rewardAmount;
-    bool testFlag;  // boolean type is 1 byte -->
-    int16 testInteger;  // combined with boolean type, it will be packed into 32 bytes (1 slot)
+    //bool testFlag;  // boolean type is 1 byte -->
+    //int16 testInteger;  // combined with boolean type, it will be packed into 32 bytes (1 slot)
     Question[] questions;
     Answer[] answers;
 
@@ -33,8 +33,8 @@ contract Survey {
         description = _description;
         targetNumber = _targetNumber;
         rewardAmount = msg.value / _targetNumber;
-        testFlag = true;
-        testInteger = 100;
+        //testFlag = true;
+        //testInteger = 100;
         for (uint i = 0; i < _questions.length; i++) {
             questions.push(
                 Question({

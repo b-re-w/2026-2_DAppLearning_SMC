@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { network } from "hardhat";
+import { keccak256 } from "ethers";
 
 /*
 it("Survey init", async () => {
@@ -206,11 +207,31 @@ it("Survey init", async () => {
         survey.getAddress(),
         ethers.toBeHex(5, 32)
     )
-    console.log(slot0Data);
-    console.log(Buffer.from(slot0Data.slice(2), "hex").toString("utf-8"));
-    console.log(slot1Data);
+
+    const decodeUni = (hex: string) =>
+        Buffer.from(hex.slice(2), "hex").toString("utf-8");
+    //console.log(decodeUni(slot0Data));
+
+    // Primitive type
+    console.log("Primitive type -------");
     console.log(slot2Data);
     console.log(slot3Data);
+
+    // Long string type
+    console.log("\nLong string type -------");
+    console.log(slot0Data);  // 0x103 == 259 (length of the string)
+    //// pDesc = hash256(pSlot1), getStorage(pDesc)
+    const pDesc = keccak256(ethers.toBeHex(1, 32));
+    const desc = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        pDesc
+    );
+    console.log(desc);
+
+
+
+    // 
+    console.log(slot1Data);
     console.log(slot4Data);
     console.log(slot5Data);
 });
