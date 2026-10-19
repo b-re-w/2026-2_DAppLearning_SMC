@@ -226,15 +226,34 @@ it("Survey init", async () => {
     // Long string type
     console.log("\nLong string type -------");
     console.log(slot0Data);  // 0x103 == 259 (length of the string)
+                             // 259 = 129 * 2 + 1
     //// pDesc = hash256(pSlot1), getStorage(pDesc)
     const pDesc = keccak256(ethers.toBeHex(1, 32));
-    const desc = await ethers.provider.getStorage(
+    const desc0 = await ethers.provider.getStorage(
         await survey.getAddress(),
-        pDesc
+        nextHash(pDesc, 0)
     );
+    const desc1 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pDesc, 1)
+    );
+    const desc2 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pDesc, 2)
+    );
+    const desc3 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pDesc, 3)
+    );
+    const desc4 = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        nextHash(pDesc, 4)
+    );
+    const desc = desc0 + desc1.slice(2) + desc2.slice(2) + desc3.slice(2) + desc4.slice(2);
+    console.log(desc);
     console.log(decodeUni(desc));
 
-    // Array Type
+    // Array & Structure Type
     ////
     //// pQuestions:      0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19b
     //// pQuestions + 1 : 0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19c
@@ -244,7 +263,7 @@ it("Survey init", async () => {
     //// question1  <------------ pQuestions + 2
     //// question1_options[]  <-- pQuestions + 3
     //// ...
-    console.log("\nArray Type -------");
+    console.log("\nArray & Structure Type -------");
     console.log("slot4Data: ", slot4Data);
     const pQuestions = keccak256(ethers.toBeHex(4, 32));
     const question0 = await ethers.provider.getStorage(
