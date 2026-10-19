@@ -369,7 +369,24 @@ describe("Survey init", () => {
         });
 
         it("should calculate rewardAmount correctly", async () => {
-            
+            const { ethers } = await network.connect();
+
+            // Set config
+            const targetNumber = 100;
+            const poolAmount = ethers.parseEther("10");
+
+            // Deploy
+            const cSurvey = await ethers.deployContract(
+                "Survey",
+                [title, description, targetNumber, questions],
+                { value: poolAmount },
+            );
+
+            // Calculate expected reward amount
+            const expectedReward = poolAmount / BigInt(targetNumber);
+
+            // Validate rewardAmount
+            expect(await cSurvey.rewardAmount()).to.equal(expectedReward);
         });
     });
 
