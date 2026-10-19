@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { network } from "hardhat";
 import { keccak256 } from "ethers";
 
-/*
+/* Week 1~4
 it("Survey init", async () => {
     const { ethers } = await network.connect();
 
@@ -161,7 +161,8 @@ describe("SurveyFactory Contract", () => {
 */
 
 
-it("Survey init", async () => {
+// Week 5
+it("Survey init (Week 5)", async () => {
     const { ethers } = await network.connect();
 
     const title: string = "막무가내 설문조사";
@@ -302,4 +303,97 @@ it("Survey init", async () => {
         mapKeyAddr
     );
     console.log("map0Value: ", map0Value);
+
+    console.log("\n");
+});
+
+
+// Week 7 Mid-term Homework
+describe("Survey init", () => {
+    const title = "막무가내 설문조사라면";
+    const description = "중앙화된 설문조사로서, 모든 데이터는 공개되지 않으며 설문조사를 게시한자만 볼 수 있습니다.";
+    const questions: Question[] = [
+        {
+            question: "누가 내 응답을 관리할때 더 솔직할 수 있을까요?",
+            options: [
+                "구글폼 운영자",
+                "탈중앙화된 블록체인 (관리주체 없으며 모든 데이터 공개)",
+                "상관없음",
+            ],
+        },
+    ];
+
+    const getSurveyContractAndEthers = async (survey: {
+        title: string;
+        description: string;
+        targetNumber: number;
+        questions: Question[];
+    }) => {
+        const { ethers } = await network.connect();
+        const cSurvey = await ethers.deployContract("Survey", [
+            survey.title,
+            survey.description,
+            survey.targetNumber,
+            survey.questions,
+        ]);
+
+        return { ethers, cSurvey };
+    };
+
+    describe("Deployment", () => {
+        it("should store survey info correctly", async () => {
+            const surveyData = {
+                title,
+                description,
+                targetNumber: 100,
+                questions,
+            };
+
+            // Deploy
+            const { cSurvey } = await getSurveyContractAndEthers(surveyData);
+
+            // Check stored data
+            expect(await cSurvey.title()).to.equal(title);  // Check title
+            expect(await cSurvey.description()).to.equal(description);  // Check description
+            expect(await cSurvey.targetNumber()).to.equal(100n);  // Check targetNumber
+
+            // Check questions
+            const storedQuestions = await cSurvey.getQuestions();  // Get the stored questions
+            expect(storedQuestions.length).to.equal(questions.length);  // Length check
+            expect(storedQuestions[0].question).to.equal(
+                questions[0].question  // Check question text
+            );
+            expect(storedQuestions[0].options).to.deep.equal(
+                questions[0].options,  // Check question options
+            );
+        });
+
+        it("should calculate rewardAmount correctly", async () => {
+            
+        });
+    });
+
+    describe("Questions and Answers", () => {
+        it("should return questions correctly", async () => {
+            
+        });
+
+        it("should allow valid answer submission", async () => {
+            
+        });
+
+        it("should revert if answer length mismatch", async () => {
+            
+        });
+
+        it("should revert if target reached", async () => {
+            
+        });
+    });
+
+    describe("Rewards", () => {
+        it("should pay correct reward to respondent", async () => {
+            
+        });
+    });
 });
