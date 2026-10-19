@@ -492,7 +492,31 @@ describe("Survey init", () => {
         });
 
         it("should revert if target reached", async () => {
-            
+            // Set targetNumber to 1
+            const surveyData = {
+                title,
+                description,
+                targetNumber: 1,
+                questions,
+            };
+            const { ethers, cSurvey } = await getSurveyContractAndEthers(surveyData);
+            const [, respondent1, respondent2] = await ethers.getSigners();
+
+            // Submit first answer
+            await cSurvey.connect(respondent1).submitAnswer({
+                respondent: respondent1.address,
+                answers: [1],
+            });
+
+            // Expect revert for second answer submission
+            await expect(
+                cSurvey.connect(respondent2).submitAnswer({
+                    respondent: respondent2.address,
+                    answers: [1],
+                }),
+            ).to.be.revertedWith(
+                "This survey has been ended. No more answers are accepted.",
+            );
         });
     });
 
