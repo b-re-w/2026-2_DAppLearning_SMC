@@ -207,15 +207,11 @@ it("Survey init", async () => {
         ethers.toBeHex(5, 32)
     )
     console.log(slot0Data);
+    console.log(Buffer.from(slot0Data.slice(2), "hex").toString("utf-8"));
     console.log(slot1Data);
     console.log(slot2Data);
     console.log(slot3Data);
     console.log(slot4Data);
     console.log(slot5Data);
-
-
-
-
-
 });
 
