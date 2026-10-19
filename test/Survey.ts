@@ -429,7 +429,42 @@ describe("Survey init", () => {
         });
 
         it("should allow valid answer submission", async () => {
-            
+            const { ethers } = await network.connect();
+            const [, respondent] = await ethers.getSigners();  // Set account
+
+            const surveyData = {
+                title,
+                description,
+                targetNumber: 100,
+                questions,
+            };
+
+            // Deploy
+            const cSurvey = await ethers.deployContract(
+                "Survey",
+                [
+                    surveyData.title,
+                    surveyData.description,
+                    surveyData.targetNumber,
+                    surveyData.questions,
+                ],
+                {
+                    value: ethers.parseEther("10"),  // with reward pool
+                },
+            );
+            const answer = {
+                respondent: respondent.address,
+                answers: [1],
+            };
+
+            // Submit answer
+            await cSurvey.connect(respondent).submitAnswer(answer);
+
+            // Validate stored answer
+            const storedAnswers = await cSurvey.getAnswers();
+            expect(storedAnswers.length).to.equal(1);  // Check answer amount
+            expect(storedAnswers[0].respondent).to.equal(respondent.address);  // Check respondent address
+            expect(storedAnswers[0].answers[0]).to.equal(1n);  // Check answer value
         });
 
         it("should revert if answer length mismatch", async () => {
