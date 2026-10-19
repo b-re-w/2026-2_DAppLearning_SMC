@@ -468,7 +468,27 @@ describe("Survey init", () => {
         });
 
         it("should revert if answer length mismatch", async () => {
-            
+            const surveyData = {
+                title,
+                description,
+                targetNumber: 100,
+                questions,
+            };
+
+            // Deploy
+            const { ethers, cSurvey } = await getSurveyContractAndEthers(surveyData);
+            const [, respondent] = await ethers.getSigners();  // Set account
+
+            // Build wrong answer with mismatched length
+            const answer = {
+                respondent: respondent.address,
+                answers: [],
+            };
+
+            // Expect revert
+            await expect(
+                cSurvey.connect(respondent).submitAnswer(answer),
+            ).to.be.revertedWith("Mismatched number of answers");
         });
 
         it("should revert if target reached", async () => {
