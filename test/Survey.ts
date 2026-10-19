@@ -392,7 +392,40 @@ describe("Survey init", () => {
 
     describe("Questions and Answers", () => {
         it("should return questions correctly", async () => {
-            
+            // Prepare survey data with two questions
+            const surveyData = {
+                title,
+                description,
+                targetNumber: 100,
+                questions: [
+                    questions[0],
+                    {
+                    question: "두 번째 질문입니다.",
+                    options: ["찬성", "반대"],
+                    },
+                ],
+            };
+
+            // Deploy
+            const { cSurvey } = await getSurveyContractAndEthers(surveyData);
+
+            // Retrieve stored questions
+            const storedQuestions = await cSurvey.getQuestions();
+
+            // Validate questions
+            expect(storedQuestions.length).to.equal(2);  // Check length
+            expect(storedQuestions[0].question).to.equal(  // Check first question text
+                surveyData.questions[0].question,
+            );
+            expect(storedQuestions[0].options).to.deep.equal(  // Check first question options
+                surveyData.questions[0].options,
+            );
+            expect(storedQuestions[1].question).to.equal(  // Check second question text
+                surveyData.questions[1].question,
+            );
+            expect(storedQuestions[1].options).to.deep.equal(  // Check second question options
+                surveyData.questions[1].options,
+            );
         });
 
         it("should allow valid answer submission", async () => {
