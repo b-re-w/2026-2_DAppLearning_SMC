@@ -211,6 +211,10 @@ it("Survey init", async () => {
         survey.getAddress(),
         ethers.toBeHex(5, 32)
     )
+    const slot6Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(6, 32)
+    )
 
     const decodeUni = (hex: string) =>
         Buffer.from(hex.slice(2), "hex").toString("utf-8");
@@ -253,7 +257,7 @@ it("Survey init", async () => {
     console.log(desc);
     console.log(decodeUni(desc));
 
-    // Array & Structure Type
+    // Array & Structure type
     ////
     //// pQuestions:      0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19b
     //// pQuestions + 1 : 0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19c
@@ -286,4 +290,16 @@ it("Survey init", async () => {
     console.log("question0_options: ", question0_options);
     console.log("question1: ", question1, decodeUni(question1));
     console.log("question1_options: ", question1_options);
+
+    // Mapping type
+    //// map[keccak256(k, slot address)]
+    console.log("\nMapping Type -------");
+    console.log("slot6Data: ", slot6Data);
+    const addr = "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199";
+    const mapKeyAddr = keccak256(ethers.toBeHex(addr, 32) + ethers.toBeHex(6, 32).slice(2));
+    const map0Value = await ethers.provider.getStorage(
+        await survey.getAddress(),
+        mapKeyAddr
+    );
+    console.log("map0Value: ", map0Value);
 });

@@ -20,6 +20,7 @@ contract Survey {
     //int16 testInteger;  // combined with boolean type, it will be packed into 32 bytes (1 slot)
     Question[] questions;
     Answer[] answers;
+    mapping (address => uint) testMap;
 
     // primitive types: uint, int, bool, address, bytes <fixed length>
     // memory (stack variable), storage (state/blockchain variable), calldata
@@ -35,6 +36,7 @@ contract Survey {
         rewardAmount = msg.value / _targetNumber;
         //testFlag = true;
         //testInteger = 100;
+        testMap[0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199] = 1000;
         for (uint i = 0; i < _questions.length; i++) {
             questions.push(
                 Question({
