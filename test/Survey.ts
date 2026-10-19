@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { network } from "hardhat";
 
-
+/*
 it("Survey init", async () => {
     const { ethers } = await network.connect();
 
@@ -157,3 +157,65 @@ describe("SurveyFactory Contract", () => {
         expect(surveys.length).to.equal(2);
     });
 });
+*/
+
+
+it("Survey init", async () => {
+    const { ethers } = await network.connect();
+
+    const title: string = "막무가내 설문조사";
+    const description: string = "중앙화된 설문조사로, 모든 데이터는 공개되지 않습니다.";
+    const questions: Question[] = [
+        {
+            question: "누가 내 응답을 관리할 때 더 솔직할 수 있을까요?",
+            options: [
+                "구글 폼 운영자", "탈 중앙화된 블록체인", "상관 없음"
+            ]
+        }
+    ]
+
+    const survey = await ethers.deployContract(
+        "Survey",
+        [title, description, 100, questions],
+        {
+            value: ethers.parseEther("100"),
+        }
+    );
+
+    const slot0Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(0, 32)
+    )
+    const slot1Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(1, 32)
+    )
+    const slot2Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(2, 32)
+    )
+    const slot3Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(3, 32)
+    )
+    const slot4Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(4, 32)
+    )
+    const slot5Data = await ethers.provider.getStorage(
+        survey.getAddress(),
+        ethers.toBeHex(5, 32)
+    )
+    console.log(slot0Data);
+    console.log(slot1Data);
+    console.log(slot2Data);
+    console.log(slot3Data);
+    console.log(slot4Data);
+    console.log(slot5Data);
+
+
+
+
+
+});
+
